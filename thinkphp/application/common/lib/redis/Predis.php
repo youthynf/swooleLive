@@ -61,4 +61,41 @@ class Predis
         }
         return $this->redis->get($key);
     }
+
+//    /**
+//     * @param $key
+//     * @param $value
+//     * @return mixed
+//     */
+//    public function sadd($key, $value) {
+//        return $this->redis->sAdd($key, $value);
+//    }
+//
+//    /**
+//     * @param $key
+//     * @param $value
+//     * @return int
+//     */
+//    public function srem($key, $value) {
+//        return $this->redis->sRem($key, $value);
+//    }
+
+    public function sMembers($key) {
+        return $this->redis->sMembers($key);
+    }
+
+    /**
+     * 使用魔术方法替换前面两个方法，使代码更简洁
+     * @param $name
+     * @param $arguments
+     * @return array
+     */
+    public function __call($name, $arguments)
+    {
+        // TODO: Implement __call() method.
+        if(count($arguments) != 2) {
+            return '';
+        }
+        return $this->redis->$name($arguments[0], $arguments[1]);
+    }
 }

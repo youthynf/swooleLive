@@ -13,7 +13,7 @@ use app\common\lib\redis\Predis;
 
 class Task
 {
-    public function sendSms($data) {
+    public function sendSms($data, $serv) {
         try {
 //            发送验证码
 //            $response = Sms::sendSms($phoneNum, $code);
@@ -32,5 +32,18 @@ class Task
             return Util::show(config('code.error', '验证码发送失败'));
         }
         return true;
+    }
+
+    /**
+     * 通过task机制发送实时赛况
+     * @param $data
+     * @param $serv
+     */
+    public function pushLive($data, $serv) {
+        $clients = Predis::getInstance()->sMembers(config('redis.live_game_key'));
+//        print_r($clients);
+        foreach($clients as $fd) {
+            $serv->push($fd, json_encode($data));
+        }
     }
 }
